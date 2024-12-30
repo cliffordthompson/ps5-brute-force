@@ -9,9 +9,9 @@ Note to the kiddos, don't use this to by-pass your parent's parent controls.
 
 ## Requirements
 
-1. This sketch requires the Arduino UNO R4 (or similar device). The Arduino UNO R3 (or similar device) will not work as it cannot using the [Keyboard Library][https://docs.arduino.cc/language-reference/en/functions/usb/Keyboard/] from Arduino.
+1. This sketch requires the Arduino UNO R4 (or similar device). The Arduino UNO R3 (or similar device) will not work as it cannot using the [Keyboard Library](https://docs.arduino.cc/language-reference/en/functions/usb/Keyboard/) from Arduino.
 
-2. This sketch also currently requires either an onboard LED matrix or something external, i.e the ability to use the [ArduinoGraphics Library][https://github.com/arduino-libraries/ArduinoGraphics] and the [Arduino_LED_Matrix Library][https://docs.arduino.cc/tutorials/uno-r4-wifi/led-matrix/] from Arduino.
+2. This sketch also currently requires either an onboard LED matrix or something external, i.e the ability to use the [ArduinoGraphics Library](https://github.com/arduino-libraries/ArduinoGraphics) and the [Arduino_LED_Matrix Library](https://docs.arduino.cc/tutorials/uno-r4-wifi/led-matrix/) from Arduino.
 
 ## The Circuit
 
