@@ -16,15 +16,16 @@
 const uint8_t BUTTON_PIN = 4;
 const uint8_t KEYPRESS_DELAY_MS = 500;
 const uint8_t ATTEMPT_DELAY_MS = 1500;
-const size_t  NUM_CHARACTERS = 10;
-const uint8_t ATTEMPTS_PER_BUTTON_PRESS = 200; // The Arduino does like us lockin up the loop() for too long.
+const uint8_t ATTEMPTS_PER_BUTTON_PRESS = 200; // The Arduino does like us locking up the loop() for too long.
 const std::array CHARACTERS = {'0','1','2','3','4','5','6','7','8','9'};
-const size_t PASSCODE_SIZE = 4;
+constexpr size_t  NUM_CHARACTERS = CHARACTERS.size();
+const size_t PASSCODE_SIZE = 4; // This could be changed for a longer passcode
 
 typedef std::array<char, PASSCODE_SIZE> Passcode;
 
-// Array to hold the current 4-character passcode. Change the
-// array indices to start at a different point.
+// Array to hold the current 4-character passcode. Change the array indices to start
+// at a different point. The size of the array could be changed here for longer, or
+// shorter passcodes.
 Passcode g_passcode = {CHARACTERS[0],CHARACTERS[0],CHARACTERS[0],CHARACTERS[0]};
 
 int g_previousButtonState = HIGH;  // For tracking the state of a pushButton
@@ -102,15 +103,21 @@ loop()
 void
 incrementPasscode(Passcode& passcode)
 {
-  for (int i = 3; i >= 0; i--) {  // Start from the least significant character
+  // Start from the least significant character
+  for (int i = passcode.size() - 1; i >= 0; --i)
+  {
     // Find the next character
-    int currentIndex = indexOf(passcode[i]);
+    const int currentIndex = indexOf(passcode[i]);
 
     // If it's not the last character, we increment to the next character
-    if (currentIndex < NUM_CHARACTERS - 1) {
+    // and stop processing further characters.
+    if (currentIndex < NUM_CHARACTERS - 1)
+    {
       passcode[i] = CHARACTERS[currentIndex + 1];
       break;
-    } else {  // If it's the last character, reset it to the first character and move to the next higher place
+    }
+    else
+    {  // If it's the last character, reset it to the first character and move to the next higher place
       passcode[i] = CHARACTERS[0];
     }
   }
@@ -205,7 +212,7 @@ displaySplashScreenOnLEDMatrix(ArduinoLEDMatrix& matrix)
   matrix.endText();
   matrix.endDraw();
 
-  delay(2000);
+  delay(1000);
 
   return;
 }
@@ -244,5 +251,3 @@ displayPasscodeOnLEDMatrix(ArduinoLEDMatrix& matrix, const Passcode& passcode)
 
   return;
 }
-
-
