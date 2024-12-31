@@ -23,83 +23,141 @@ const size_t PASSCODE_SIZE = 4;
 
 typedef std::array<char, PASSCODE_SIZE> Passcode;
 
-// Array to hold the current 4-character combination. Change the
+// Array to hold the current 4-character passcode. Change the
 // array indices to start at a different point.
-Passcode combination = {CHARACTERS[0],CHARACTERS[0],CHARACTERS[0],CHARACTERS[0]}; 
+Passcode g_passcode = {CHARACTERS[0],CHARACTERS[0],CHARACTERS[0],CHARACTERS[0]};
 
-int previousButtonState = HIGH;  // For tracking the state of a pushButton
-ArduinoLEDMatrix matrix;
+int g_previousButtonState = HIGH;  // For tracking the state of a pushButton
+ArduinoLEDMatrix g_matrix;
 
-void setup() 
+// ***************************************************************************
+// Description:
+//   The standard Arduino startup function.
+//
+// Inputs:
+//   None
+// Outputs:
+//   None
+// Returns:
+//   None
+// ***************************************************************************
+//
+void
+setup()
 {
   pinMode(BUTTON_PIN, INPUT);
   // initialize control over the keyboard:
   Keyboard.begin();
   delay(1000);
+  displaySplashScreenOnLEDMatrix(g_matrix);
 
-  Serial.begin(115200);
-  matrix.begin();
-
-  matrix.beginDraw();
-  matrix.stroke(0xFFFFFFFF);
-  // add some static text
-  // will only show "UNO" (not enough space on the display)
-  const char text[] = "UNO r4";
-  matrix.textFont(Font_4x6);
-  matrix.beginText(0, 1, 0xFFFFFF);
-  matrix.println(text);
-  matrix.endText();
-
-  matrix.endDraw();
-
-  delay(2000);
-
+  return;
 }
 
-void loop() 
+// ***************************************************************************
+// Description:
+//   The standard Arduino event loop.
+//
+// Inputs:
+//   None
+// Outputs:
+//   None
+// Returns:
+//   None
+// ***************************************************************************
+//
+void
+loop()
 {
-  int buttonState = digitalRead(BUTTON_PIN);
+  const int buttonState = digitalRead(BUTTON_PIN);
 
-  if((buttonState != previousButtonState) && (buttonState == HIGH))
+  if((buttonState != g_previousButtonState) && (buttonState == HIGH))
   {
     for(int i = 0; i < ATTEMPTS_PER_BUTTON_PRESS; ++i)
     {
-      displayPasscodeOnLEDMatrix(combination);
-      tryPasscode(combination);
-      incrementCombination();
+      displayPasscodeOnLEDMatrix(g_matrix, g_passcode);
+      tryPasscode(g_passcode);
+      incrementPasscode(g_passcode);
       delay(ATTEMPT_DELAY_MS);
-    }  
+    }
   }
-  previousButtonState = buttonState;
+  g_previousButtonState = buttonState;
+
+  return;
 }
 
-// Function to increment the combination
-void incrementCombination() {
+// ***************************************************************************
+// Description:
+//   This function increments the current passcode to the next one
+//   in the sequence.
+//
+// Inputs:
+//   passcode: The passcode to increment
+// Outputs:
+//   None
+// Returns:
+//   None
+// ***************************************************************************
+//
+void
+incrementPasscode(Passcode& passcode)
+{
   for (int i = 3; i >= 0; i--) {  // Start from the least significant character
     // Find the next character
-    int currentIndex = indexOf(combination[i]);
+    int currentIndex = indexOf(passcode[i]);
 
     // If it's not the last character, we increment to the next character
     if (currentIndex < NUM_CHARACTERS - 1) {
-      combination[i] = CHARACTERS[currentIndex + 1];
+      passcode[i] = CHARACTERS[currentIndex + 1];
       break;
     } else {  // If it's the last character, reset it to the first character and move to the next higher place
-      combination[i] = CHARACTERS[0];
+      passcode[i] = CHARACTERS[0];
     }
   }
+  return;
 }
 
-// Function to find the index of a character in the characters array
-int indexOf(char ch) {
-  for (int i = 0; i < NUM_CHARACTERS; i++) {
-    if (CHARACTERS[i] == ch) {
+// ***************************************************************************
+// Description:
+//   This function attempts to find the index of a character in the
+//   characters array
+//
+// Inputs:
+//   ch: The character top find the index of.
+// Outputs:
+//   None
+// Returns:
+//   The index of 'ch' in the characters array.
+// ***************************************************************************
+//
+int
+indexOf(char ch)
+{
+  for (int i = 0; i < NUM_CHARACTERS; i++)
+  {
+    if (CHARACTERS[i] == ch)
+    {
       return i;
     }
   }
   return -1;  // Return -1 if the character is not found (this shouldn't happen)
 }
 
-void tryPasscode(const Passcode& passcode)
+// ***************************************************************************
+// Description:
+//   This function attempts to input the give passcode. The Arduino is acting
+//   as a keyboard.
+//
+// Inputs:
+//   passcode: The passcode to try.
+// Outputs:
+//   None
+// Returns:
+//   None
+// ***************************************************************************
+//
+void
+tryPasscode(const Passcode& passcode)
 {
   for(const auto& number: passcode)
   {
@@ -114,9 +172,59 @@ void tryPasscode(const Passcode& passcode)
   delay(KEYPRESS_DELAY_MS);
   Keyboard.releaseAll();
   delay(KEYPRESS_DELAY_MS);
+
+  return;
 }
 
-void displayPasscodeOnLEDMatrix(const Passcode& passcode)
+// ***************************************************************************
+// Description:
+//   Displays the splash screen to the LED Matrix. In this case, it's "PS5".
+//   We are limted by the font size of the Arduino Graphics, without have to
+//   scroll the text.
+//
+// Inputs:
+//   None
+// Outputs:
+//   None
+// Returns:
+//   None
+// ***************************************************************************
+//
+void
+displaySplashScreenOnLEDMatrix(ArduinoLEDMatrix& matrix)
+{
+  Serial.begin(115200);
+
+  matrix.begin();
+  matrix.beginDraw();
+  matrix.stroke(0xFFFFFFFF);
+  const char text[] = "PS5";
+  matrix.textFont(Font_4x6);
+  matrix.beginText(0, 1, 0xFFFFFF);
+  matrix.println(text);
+  matrix.endText();
+  matrix.endDraw();
+
+  delay(2000);
+
+  return;
+}
+
+// ***************************************************************************
+// Description:
+//   This function displays a passcode to the LED Matrix.
+//
+// Inputs:
+//   matrix: The LED Matrix to display on
+//   passcode: The passcode to display.
+// Outputs:
+//   None
+// Returns:
+//   None
+// ***************************************************************************
+//
+void
+displayPasscodeOnLEDMatrix(ArduinoLEDMatrix& matrix, const Passcode& passcode)
 {
   std::string displayString;
 
@@ -133,6 +241,8 @@ void displayPasscodeOnLEDMatrix(const Passcode& passcode)
   matrix.println(displayString.c_str());
   matrix.endText(/*SCROLL_LEFT*/);
   matrix.endDraw();
+
+  return;
 }
 
 

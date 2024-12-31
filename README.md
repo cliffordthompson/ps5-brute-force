@@ -26,7 +26,7 @@ Markup : ![](https://docs.arduino.cc/static/fb8449b4834dfbbf3c03223c8bc3e5b5/a6d
 1. Upload the sketch to your Arduino
 2. Navigate to the Parental Controls on your PS5
 3. Change the entry method from the controller-style to keypad-style.
-4. Plug the Arduino into your PS5. The word *UNO* should be displayed on the LED matrix
+4. Plug the Arduino into your PS5. The word *PS5* should be displayed on the LED matrix
 5. Press the button on your breadboard
 6. Wait for the Arduino to crack your code
   - The sketch will do batches of 200, and then pause (awaiting you to press the button again).
