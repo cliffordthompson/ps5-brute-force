@@ -15,11 +15,11 @@ Note to the kiddos, don't use this to by-pass your parent's parent controls.
 
 ## The Circuit
 
-Markup : ![](https://docs.arduino.cc/static/73702ee121860fa04c7f6db5bc77183b/a6d36/circuit.png "Simple Button Circuit")
+![](https://docs.arduino.cc/static/73702ee121860fa04c7f6db5bc77183b/a6d36/circuit.png "Simple Button Circuit")
 
 ## The Schematic
 
-Markup : ![](https://docs.arduino.cc/static/fb8449b4834dfbbf3c03223c8bc3e5b5/a6d36/schematic.png "Simple Button Circuit Schematic")
+![](https://docs.arduino.cc/static/fb8449b4834dfbbf3c03223c8bc3e5b5/a6d36/schematic.png "Simple Button Circuit Schematic")
 
 ## How to Use It
 
